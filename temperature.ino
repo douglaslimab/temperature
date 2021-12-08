@@ -1,7 +1,6 @@
 #include <LiquidCrystal.h>
 
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
-//LiquidCrystal lcd(12, 11, 10, 5, 4, 3, 2);
 
 const int B = 4275;
 const int R0 = 100000;
@@ -15,10 +14,10 @@ struct {
   {  500, "Down" },
   {  750, "Left" },
   {  850, "Select" },
-  { 1024, "        " }  // nenhuma tecla apertada
+  { 1024, "        " }  // no key pressed
 };
  
-// Iniciação
+// Initialize
 void setup() {
   Serial.begin(9600);
   Serial.println("Ini..");
@@ -29,24 +28,25 @@ void setup() {
   lcd.print("Done!!");
   delay(100);
   
-  pinMode(A5, OUTPUT);
+  pinMode(A5, INPUT);
   pinMode(A4, INPUT);
   pinMode(A3, INPUT);
   pinMode(A0, INPUT);
-  
-  buzz(2);
 }
  
 void loop() {
   int z = read_key();
-  float temp;
+  float temp, lum;
 
   switch  (z){
     case  0:
       read_temp();
     break;
     case  1:
-      read_light();
+      lum = read_light();
+
+      Serial.print("Luminosity: ");
+      Serial.println(lum);
     break;
     case  2:
     break;
@@ -58,11 +58,12 @@ void loop() {
     break;
   }
   
-  delay (100);
+  read_temp();
+  delay (1000);
 }
 
 int read_key(){
-  static int teclaAnt = -1;   // última tecla detectada
+  static int teclaAnt = -1;   // last key
  
   int leitura = analogRead(A0);
  
@@ -99,21 +100,13 @@ void  read_temp(){
   lcd.print(temperature);
 }
 
-void  read_light(){
+float  read_light(){
   int light = analogRead(A5);
 
   float Rsensor = (1023-light)*10/light;
 
-  Serial.print("Luminosity: ");
-  Serial.println(Rsensor);
-}
-
-void buzz(int f){
-  int i = 0;
-  for(i = 0; i < 50; i++){
-    digitalWrite(A5, HIGH);
-    delay(f);
-    digitalWrite(A5, LOW);
-    delay(f);
-  }
+  return(Rsensor);
+  
+//  Serial.print("Luminosity: ");
+//  Serial.println(Rsensor);
 }
