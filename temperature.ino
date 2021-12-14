@@ -19,8 +19,9 @@ struct {
  
 // Initialize
 void setup() {
-  Serial.begin(9600);
-  Serial.println("Ini..");
+  Serial.begin(115200);
+  Serial.setTimeout(1);
+//  Serial.println("Ini..");
 
   lcd.clear();
   lcd.begin(16, 2);
@@ -90,14 +91,18 @@ void  read_temp(){
  
   float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // convert to temperature via datasheet
  
-  Serial.print("Teamperature: ");
-  Serial.println(temperature);
+//  Serial.print("Temperature: ");
+  Serial.print(temperature);
+//  Serial.println(" C");
 
   lcd.clear();
   lcd.setCursor(0, 0);
-  lcd.print("Teamperature: ");
+  lcd.print("Temperature: ");
   lcd.setCursor(0, 1);
   lcd.print(temperature);
+  lcd.setCursor(6, 1);
+  lcd.print((char)223); 
+  lcd.print("C");
 }
 
 float  read_light(){
