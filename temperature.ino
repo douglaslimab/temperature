@@ -41,7 +41,6 @@ void loop() {
 
   switch  (z){
     case  0:
-      read_temp();
     break;
     case  1:
       lum = read_light();
@@ -50,6 +49,7 @@ void loop() {
       Serial.println(lum);
     break;
     case  2:
+      read_temp();
     break;
     case  3:
     break;
@@ -58,6 +58,11 @@ void loop() {
     case  5:
     break;
   }
+
+  // read sensors
+  // read key
+  // read flag to change
+  // display menu
   
   read_temp();
   delay (1000);
@@ -89,7 +94,7 @@ void  read_temp(){
   float R = 1023.0/temp-1.0;
   R = R0*R;
  
-  float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // convert to temperature via datasheet
+  float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // converttion based on the datasheet
  
 //  Serial.print("Temperature: ");
   Serial.print(temperature);
