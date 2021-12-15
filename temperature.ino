@@ -4,6 +4,7 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
 const int B = 4275;
 const int R0 = 100000;
+int menu_pointer = 0;
 
 struct {
   int limite;
@@ -37,19 +38,23 @@ void setup() {
  
 void loop() {
   int z = read_key();
-  float temp, lum;
 
+  // read key
+  // read flag to change
   switch  (z){
     case  0:
     break;
     case  1:
-      lum = read_light();
-
-      Serial.print("Luminosity: ");
-      Serial.println(lum);
+      menu_pointer--;
+      if (menu_pointer < 0){
+        menu_pointer = 0;
+      }
     break;
     case  2:
-      read_temp();
+      menu_pointer++;
+      if (menu_pointer > 1){
+        menu_pointer = 1;
+      }
     break;
     case  3:
     break;
@@ -58,13 +63,15 @@ void loop() {
     case  5:
     break;
   }
-
-  // read sensors
-  // read key
-  // read flag to change
-  // display menu
   
-  read_temp();
+  // display menu
+  // read sensors
+  if (menu_pointer == 0){
+    read_temp();
+  } else if (menu_pointer == 1){
+    read_light();
+  }
+
   delay (1000);
 }
 
@@ -96,9 +103,7 @@ void  read_temp(){
  
   float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // converttion based on the datasheet
  
-//  Serial.print("Temperature: ");
   Serial.print(temperature);
-//  Serial.println(" C");
 
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -115,8 +120,12 @@ float  read_light(){
 
   float Rsensor = (1023-light)*10/light;
 
-  return(Rsensor);
-  
-//  Serial.print("Luminosity: ");
-//  Serial.println(Rsensor);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Luminosity: ");
+  lcd.setCursor(0, 1);
+  lcd.print(Rsensor);
+  lcd.setCursor(6, 1);
+//  lcd.print((char)223); 
+  lcd.print("Lum");
 }
