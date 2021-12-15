@@ -22,7 +22,6 @@ struct {
 void setup() {
   Serial.begin(115200);
   Serial.setTimeout(1);
-//  Serial.println("Ini..");
 
   lcd.clear();
   lcd.begin(16, 2);
@@ -88,9 +87,6 @@ int read_key(){
   }
   
   if (teclaNova != teclaAnt) {
-//    lcd.setCursor(0,1);
-//    lcd.print(teclas[teclaNova].nome);
-//    Serial.println(teclas[teclaNova].nome);
     return (teclaNova);
     teclaAnt = teclaNova;
   }  
@@ -99,8 +95,7 @@ int read_key(){
 void  read_temp(){
   int temp = analogRead(A4);
   float R = 1023.0/temp-1.0;
-  R = R0*R;
- 
+  R = R0*R; 
   float temperature = 1.0/(log(R/R0)/B+1/298.15)-273.15; // converttion based on the datasheet
  
   Serial.print(temperature);
@@ -117,7 +112,6 @@ void  read_temp(){
 
 float  read_light(){
   int light = analogRead(A5);
-
   float Rsensor = (1023-light)*10/light;
 
   lcd.clear();
